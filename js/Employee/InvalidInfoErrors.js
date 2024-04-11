@@ -1,11 +1,13 @@
 export class InvalidAccountError extends Error {
-  constructor(message = "Account must contains 4-6 numbers") {
+  constructor(
+    message = "Account must contains 4-6 only numbers and not blank"
+  ) {
     super(message);
   }
 }
 
 export class InvalidNameError extends Error {
-  constructor(message = "Name must contains only letters") {
+  constructor(message = "Name must contains only letters and not blank") {
     super(message);
   }
 }
@@ -37,7 +39,9 @@ export class InvalidPositionError extends Error {
 }
 
 export class InvalidSalaryError extends Error {
-  constructor(message = "Salary must be a number between 1mil and 20mil") {
+  constructor(
+    message = "Salary must be a number between 1000000 and 20000000"
+  ) {
     super(message);
   }
 }
