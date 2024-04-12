@@ -100,7 +100,7 @@ export class Employee {
     if (!this.isAccountValid(account)) {
       throw new InvalidAccountError();
     }
-    this.#account = account;
+    this.#account = `${account}`;
   }
 
   getAccount() {
@@ -237,14 +237,13 @@ export class Employee {
   }
 
   isPositionValid(position) {
-    if (
-      position != POSITION.STAFF.value &&
-      position != POSITION.HEAD_DEPT.value &&
-      position != POSITION.MANAGER.value
-    )
-      return false;
+    for (let i in POSITION) {
+      if (Number(position.value) === POSITION[i].value) {
+        return true;
+      }
+    }
 
-    return true;
+    return false;
   }
 
   setPosition(position) {
@@ -252,7 +251,8 @@ export class Employee {
       throw new InvalidPositionError();
     }
     for (let i in POSITION) {
-      if (Number(position) === POSITION[i].value) this.#position = POSITION[i];
+      if (Number(position.value) === POSITION[i].value)
+        this.#position = POSITION[i];
     }
   }
 
@@ -261,6 +261,7 @@ export class Employee {
   }
 
   isSalaryValid(salary) {
+    if (typeof salary == "number") salary = salary.toString();
     if (
       salary.length === 0 ||
       salary.match(/[^0-9]/) !== null ||
@@ -284,6 +285,7 @@ export class Employee {
   }
 
   isWorkingHourValid(workingHour) {
+    if (typeof workingHour == "number") workingHour = workingHour.toString();
     if (
       workingHour.length === 0 ||
       workingHour.match(/[^0-9\.]/) !== null ||

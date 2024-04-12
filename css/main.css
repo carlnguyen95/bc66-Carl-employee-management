@@ -20,3 +20,8 @@
 .myCardHeader, .myCardFooter{
 	background-color: transparent;       
 }
+
+
+#tableDanhSach td {
+  vertical-align: middle;
+}
