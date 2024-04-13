@@ -20,17 +20,23 @@ export class EmployeeManagement {
     return this.#EmployeeList;
   }
 
-  checkDuplicate(info) {
-    for (let i in this.#EmployeeList) {
-      if (this.#EmployeeList[i].getAccount() === info.account)
-        throw new InvalidAccountError(
-          "This account exists. Please input another one"
-        );
-      else if (this.#EmployeeList[i].getMail() === info.mail)
+  checkDuplicate(info, onlyMail = false) {
+    this.#EmployeeList.findIndex((employee) => {
+      if (!onlyMail) {
+        if (employee.getAccount() === info.account)
+          throw new InvalidAccountError(
+            "This account exists. Please input another one"
+          );
+      }
+      //Check if there is an account registered with this mail
+      if (
+        employee.getMail() === info.mail &&
+        employee.getAccount() !== info.account
+      )
         throw new InvalidMailError(
           "This mail exists. Please input another one"
         );
-    }
+    });
   }
 
   saveLocal() {
@@ -61,24 +67,10 @@ export class EmployeeManagement {
 
   updateEmployee(info) {
     const index = this.searchIndexOfEmployees("account", info.account);
-    if (index.length === 1) {
-      const newEmployee = new Employee(info);
-      this.#EmployeeList[index] = newEmployee;
-      return 200;
-    } else if (index.length > 1) {
-      throw new Error(
-        `There are ${index.length} employees with same account in EmployeeList`
-      );
-    }
-
-    index = this.searchIndexOfEmployees("mail", info.mail);
-    if (index.length === 1) {
-      const newEmployee = new Employee(info);
-      this.#EmployeeList[index] = newEmployee;
-      return 200;
-    }
-
-    return 404;
+    this.checkDuplicate(info, true);
+    const newEmployee = new Employee(info);
+    this.#EmployeeList[index] = newEmployee;
+    this.saveLocal();
   }
 
   removeEmployee(account) {
@@ -121,15 +113,15 @@ export class EmployeeManagement {
   }
 
   searchInfoEmployee(type, searchKey) {
-    let infoArr = [];
+    let info = {};
     const indexArr = this.searchIndexOfEmployees(type, searchKey);
     indexArr.forEach((index) => {
-      infoArr.push(this.#EmployeeList[index].getInfo());
+      info[index] = this.#EmployeeList[index].getInfo();
     });
 
     /**
      * Don't have to check duplicate for account or array since searchIndexOfEmployee did it
      */
-    return infoArr;
+    return info;
   }
 }

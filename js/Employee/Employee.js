@@ -10,24 +10,24 @@ import {
 } from "./InvalidInfoErrors.js";
 
 const EMPLOYEE_CLASSES = {
-  OUTSTANDING: "Outstanding",
-  VERYGOOD: "Very Good",
-  GOOD: "Good",
-  AVERAGE: "Average",
+  OUTSTANDING: "Xuất sắc",
+  VERYGOOD: "Rất tốt",
+  GOOD: "Tốt",
+  AVERAGE: "Khá",
 };
 
 const POSITION = {
   MANAGER: {
     value: 3,
-    title: "Manager",
+    title: "Sếp",
   },
   HEAD_DEPT: {
     value: 2,
-    title: "Head of Department",
+    title: "Trưởng phòng",
   },
   STAFF: {
     value: 1,
-    title: "Staff",
+    title: "Nhân viên",
   },
 };
 

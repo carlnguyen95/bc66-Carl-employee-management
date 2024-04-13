@@ -23,20 +23,27 @@ const salaryInput =  document.querySelector("#luongCB");
 const positionInput =  document.querySelector("#chucvu");
 const workingHourInput =  document.querySelector("#gioLam");
 const myModal = document.querySelector("#myModal");
+const addBtn = document.querySelector("#btnThem");
+const addEmployeeBtn = document.querySelector("#btnThemNV");
+const updateEmployeeBtn = document.querySelector("#btnCapNhat");
 /*** END Global Var ***/
 
 window.onload = () => {
   renderEmloyeesTable();
 }
 
-document.querySelector("#btnThem").addEventListener("click", () => {
+addBtn.addEventListener("click", () => {
   clearAllFormInput();
+  clearAllInvalidNoti();
+  clearModalStatus();
+  updateEmployeeBtn.classList.add("d-none");
+  addEmployeeBtn.classList.remove("d-none");
 })
 
 /**
  * Add Employee
  */
-document.querySelector("#btnThemNV").addEventListener("click", () => {
+addEmployeeBtn.addEventListener("click", () => {
   try {
     const info = packInfo();
     controller.validateAddEmployee(info);
@@ -66,23 +73,46 @@ tblBody.addEventListener("click", (e) => {
   }
 
   if (e.target.matches(".update-btn")) {
+    clearAllInvalidNoti();
+    clearModalStatus();
     const updateBtn = e.target;
     // Get employee info of that row
     const employee = updateBtn.parentNode.parentNode;
     const account = employee.querySelector("td").textContent;
 
     // Find employee with the account, display on form
-    const info = controller.searchInfoEmployee("account", account);
-    accountInput.value = info[0].account;
-    nameInput.value = info[0].name;
-    mailInput.value = info[0].mail;
-    passwordInput.value = info[0].password;
-    startDayInput.value = info[0].startDay;
-    positionInput.value = info[0].position.value;
-    salaryInput.value = info[0].salary;
-    workingHourInput.value = info[0].workingHour;
+    const objInfo = controller.searchInfoEmployee("account", account);
+    const info = Object.values(objInfo)[0];
+    accountInput.value = info.account;
+    nameInput.value = info.name;
+    mailInput.value = info.mail;
+    passwordInput.value = info.password;
+    startDayInput.value = info.startDay;
+    positionInput.value = info.position.value;
+    salaryInput.value = info.salary;
+    workingHourInput.value = info.workingHour;
+    accountInput.readOnly = true;
+    addEmployeeBtn.classList.add("d-none");
+    updateEmployeeBtn.classList.remove("d-none");
   }
 })
+
+updateEmployeeBtn.addEventListener("click", () => {
+  try {
+    const info = packInfo();
+    controller.updateEmployee(info);
+  }
+  catch (err) {
+    notifyErr(err);
+    clearModalStatus();
+    return;
+  }
+
+  setModalStatus("Cập nhật thành công");
+  clearAllInvalidNoti();
+  renderEmloyeesTable();
+})
+
 
 /**
  * Get info from the form, pack into object
@@ -182,8 +212,16 @@ function renderEmloyeesTable() {
 }
 
 function clearAllFormInput() {
-  const inputElements = myModal.querySelectorAll("input");
-  inputElements.forEach((element) => {
-    element.value =  "";
-  })
+  const form = myModal.querySelector("form");
+  form.reset();
+  accountInput.readOnly = false;
+  clearModalStatus();
+}
+
+function setModalStatus(message) {
+  document.querySelector(".modal-status").textContent = message;
+}
+
+function clearModalStatus() {
+  document.querySelector(".modal-status").textContent = "";
 }
