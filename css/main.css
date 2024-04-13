@@ -16,6 +16,15 @@
 
 }
 
+.update-btn {
+  margin-bottom: 10px;
+}
+
+.update-btn,
+.delete-btn {
+  display: block;
+}
+
 
 .myCardHeader, .myCardFooter{
 	background-color: transparent;       
