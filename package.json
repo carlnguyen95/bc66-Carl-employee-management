@@ -1,0 +1,14 @@
+{
+  "name": "employee-management",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "npx mocha test/*.js --timeout 60000",
+    "account-validation": "npx mocha test/form_validation/AccountValidationTest.js"
+  },
+  "dependencies": {
+    "selenium-webdriver": "^4.19.0"
+  },
+  "devDependencies": {
+    "mocha": "10.4.0"
+  }
+}
