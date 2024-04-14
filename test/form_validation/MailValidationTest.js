@@ -14,7 +14,7 @@ const assert = require("assert");
  * 3. Data are shown correctly in the table
  * 4. Button delete and update displayed
  */
-describe("Name Validation tests", function () {
+describe("Mail Validation tests", function () {
   let driver;
   let validAccount = "12345";
   let validName = "Karl Maynar";
@@ -27,7 +27,7 @@ describe("Name Validation tests", function () {
     value: "2",
   };
   let validWorkingHour = "180";
-  let nameInput;
+  let mailInput;
   const specialCharacters = [
     "!",
     "@",
@@ -71,7 +71,7 @@ describe("Name Validation tests", function () {
     await positionSelect.selectByValue(validPosition.value);
     driver.findElement(By.id("gioLam")).sendKeys(validWorkingHour);
 
-    nameInput = await driver.findElement(By.id("name"));
+    mailInput = await driver.findElement(By.id("mail"));
   });
 
   it("Success adding case", async function () {
@@ -105,17 +105,17 @@ describe("Name Validation tests", function () {
     assert.equal(result, true);
   });
 
-  it("Name input is blank or has only space", async function () {
+  it("Mail input is blank or has only space", async function () {
     let randomLength = Math.round(Math.random() * 3);
-    let errName = "";
+    let errMail = "";
     while (randomLength > 0) {
-      errName += " ";
+      errMail += " ";
       randomLength--;
     }
-    await nameInputErr(errName);
+    await mailInputErr(errName);
   });
 
-  it("Name has special characters", async function () {
+  it("Invalid Mails", async function () {
     let errName = [...validName]; //String to array
     let randomIndex = Math.round(
       Math.random() * (specialCharacters.length - 1)
@@ -124,34 +124,15 @@ describe("Name Validation tests", function () {
     randomIndex = Math.round(Math.random() * (errName.length - 1));
     errName[randomIndex] = specialChar;
     errName = errName.join("");
-    await nameInputErr(errName);
+    await mailInputErr(errName);
   });
 
-  it("Name has number", async function () {
-    let errName = [...validName]; //String to array
-    let randomNumber = Math.round(Math.random() * 9);
-    let randomIndex = Math.round(Math.random() * (errName.length - 1));
-    errName[randomIndex] = randomNumber;
-    errName = errName.join("");
-    await nameInputErr(errName);
-  });
-
-  it("Name has mixed characters", async function () {
-    let errName = [...validName]; //String to array
-    let randomIndex = Math.round(Math.random() * 4);
-    errName[randomIndex] = "#";
-    randomIndex = Math.round(Math.random() * 4);
-    errName[randomIndex] = "9";
-    errName = errName.join("");
-    await nameInputErr(errName);
-  });
-
-  async function nameInputErr(errName) {
-    nameInput.clear();
-    await nameInput.sendKeys(errName);
+  async function mailInputErr(errMail) {
+    mailInput.clear();
+    await mailInput.sendKeys(errMail);
     await driver.findElement(By.id("btnThemNV")).click();
-    let nameTb = await driver.findElement(By.css("#tbTen")).getText();
-    assert.equal(nameTb, "Name must contains only letters and not blank");
+    let mailTb = await driver.findElement(By.css("#tbEmail")).getText();
+    assert.equal(mailTb, "Wrong mail format");
   }
 
   after(async () => await driver.quit());
