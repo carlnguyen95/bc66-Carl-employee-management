@@ -112,16 +112,47 @@ export class EmployeeManagement {
     return indexArr;
   }
 
+  partialSearchIndexOfEmployees(type, searchKey) {
+    let indexArr = [];
+    for (let i in this.#EmployeeList) {
+      const info = this.#EmployeeList[i].getInfo();
+      if (!info.hasOwnProperty(type))
+        throw new Error(`"${type}" is an invalid search type`);
+      if (type === "position") {
+        if (info[type].title.search(searchKey) != -1) {
+          indexArr.push(i);
+        }
+      } else {
+        if (info[type].search(searchKey) != -1) {
+          indexArr.push(i);
+        }
+      }
+    }
+
+    return indexArr;
+  }
+
   searchInfoEmployee(type, searchKey) {
     let info = {};
     const indexArr = this.searchIndexOfEmployees(type, searchKey);
     indexArr.forEach((index) => {
-      info[index] = this.#EmployeeList[index].getInfo();
+      info[index] = this.#EmployeeList[index];
     });
 
     /**
      * Don't have to check duplicate for account or array since searchIndexOfEmployee did it
      */
+    return info;
+  }
+
+  partialSearchInfoEmployee(type, searchKey) {
+    let info = [];
+
+    const indexArr = this.partialSearchIndexOfEmployees(type, searchKey);
+    indexArr.forEach((index) => {
+      info.push(this.#EmployeeList[index]);
+    });
+
     return info;
   }
 }
