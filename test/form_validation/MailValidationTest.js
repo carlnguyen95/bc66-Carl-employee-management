@@ -5,8 +5,8 @@ const assert = require("assert");
  * FLOW
  * 1. Access website
  * 2. Push "Them nhan vien" button
- * 3. Fill all valid info except account
- * 4. Fill account with test data
+ * 3. Fill all valid info
+ * 4. Fill test fields with test data
  *
  * CHECKPOINT:
  * 1. Wrong format
@@ -14,7 +14,7 @@ const assert = require("assert");
  * 3. Data are shown correctly in the table
  * 4. Button delete and update displayed
  */
-describe("Name Validation tests", function () {
+describe("Mail Validation tests", function () {
   let driver;
   let validAccount = "12345";
   let validName = "Karl Maynar";
@@ -27,7 +27,7 @@ describe("Name Validation tests", function () {
     value: "2",
   };
   let validWorkingHour = "180";
-  let nameInput;
+  let mailInput;
   const specialCharacters = [
     "!",
     "@",
@@ -71,7 +71,7 @@ describe("Name Validation tests", function () {
     await positionSelect.selectByValue(validPosition.value);
     driver.findElement(By.id("gioLam")).sendKeys(validWorkingHour);
 
-    nameInput = await driver.findElement(By.id("name"));
+    mailInput = await driver.findElement(By.id("email"));
   });
 
   it("Success adding case", async function () {
@@ -105,53 +105,47 @@ describe("Name Validation tests", function () {
     assert.equal(result, true);
   });
 
-  it("Name input is blank or has only space", async function () {
+  it("Mail input is blank or has only space", async function () {
     let randomLength = Math.round(Math.random() * 3);
-    let errName = "";
+    let errMail = "";
     while (randomLength > 0) {
-      errName += " ";
+      errMail += " ";
       randomLength--;
     }
-    await nameInputErr(errName);
+    await mailInputErr(errMail);
   });
 
-  it("Name has special characters", async function () {
-    let errName = [...validName]; //String to array
-    let randomIndex = Math.round(
-      Math.random() * (specialCharacters.length - 1)
-    );
-    let specialChar = specialCharacters[randomIndex];
-    randomIndex = Math.round(Math.random() * (errName.length - 1));
-    errName[randomIndex] = specialChar;
-    errName = errName.join("");
-    await nameInputErr(errName);
+  it("Invalid Mails", async function () {
+    const invalidMailArr = [
+      "#@%^%#$@#$@#.com",
+      "@example.com",
+      "Joe Smith <email@example.com>",
+      "email.example.com",
+      "email@example@example.com",
+      ".email@example.com",
+      "email.@example.com",
+      "email..email@example.com",
+      "あいうえお@example.com",
+      "email@example.com (Joe Smith)",
+      "email@example",
+      "email@-example.com",
+      "email@example.web",
+      "email@111.222.333.44444",
+      "email@example..com",
+      "Abc..123@example.com]",
+    ];
+    await invalidMailArr.forEach(async (mail) => {
+      await mailInputErr(mail);
+    });
   });
 
-  it("Name has number", async function () {
-    let errName = [...validName]; //String to array
-    let randomNumber = Math.round(Math.random() * 9);
-    let randomIndex = Math.round(Math.random() * (errName.length - 1));
-    errName[randomIndex] = randomNumber;
-    errName = errName.join("");
-    await nameInputErr(errName);
-  });
-
-  it("Name has mixed characters", async function () {
-    let errName = [...validName]; //String to array
-    let randomIndex = Math.round(Math.random() * 4);
-    errName[randomIndex] = "#";
-    randomIndex = Math.round(Math.random() * 4);
-    errName[randomIndex] = "9";
-    errName = errName.join("");
-    await nameInputErr(errName);
-  });
-
-  async function nameInputErr(errName) {
-    nameInput.clear();
-    await nameInput.sendKeys(errName);
+  async function mailInputErr(errMail) {
+    mailInput.clear();
+    await mailInput.sendKeys(errMail);
     await driver.findElement(By.id("btnThemNV")).click();
-    let nameTb = await driver.findElement(By.css("#tbTen")).getText();
-    assert.equal(nameTb, "Name must contains only letters and not blank");
+    let mailTb = await driver.findElement(By.css("#tbEmail")).getText();
+    assert.equal(mailTb, "Wrong email format");
+    driver.findElement(By.css("#btnDong")).click();
   }
 
   after(async () => await driver.quit());
