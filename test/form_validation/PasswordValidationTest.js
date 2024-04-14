@@ -143,34 +143,33 @@ describe("Password Validation tests", function () {
     let arr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "k"];
     let randomLength = Math.round(Math.random() * 4 + 6);
     arr = arr.slice(0, randomLength);
+    let usedArr = [];
     let randomNumberOfSC = Math.round(Math.random() * (arr.length - 2) + 1);
     for (let i = 0; i < randomNumberOfSC; i++) {
       let randomIndex = Math.round(Math.random() * (arr.length - 1));
       arr[randomIndex] = specialCharacters[randomIndex];
+      usedArr.push(arr[randomIndex]);
     }
     let randomNumberOfNum = Math.round(
       Math.random() * (arr.length - randomNumberOfSC - 1) + 1
     );
     for (let i = 0; i < randomNumberOfNum; i++) {
       let randomIndex = Math.round(Math.random() * (arr.length - 1));
-      while (specialCharacters.indexOf(arr[randomIndex]) != -1)
+      while (usedArr.indexOf(arr[randomIndex]) != -1)
         randomIndex = Math.round(Math.random() * (arr.length - 1));
       arr[randomIndex] = Math.round(Math.random() * 9);
+      usedArr.push(arr[randomIndex]);
     }
     let randomNumberOfUppercase =
       arr.length - randomNumberOfNum - randomNumberOfSC;
     for (let i = 0; i < randomNumberOfUppercase; i++) {
       let randomIndex = Math.round(Math.random() * (arr.length - 1));
-      while (
-        specialCharacters.indexOf(arr[randomIndex]) != -1 ||
-        typeof arr[randomIndex] == "number"
-      ) {
+      while (usedArr.indexOf(arr[randomIndex]) != -1) {
         randomIndex = Math.round(Math.random() * (arr.length - 1));
       }
       arr[randomIndex] = "P";
     }
     let pass = arr.join("");
-    // console.log(pass);
     passwordInput.clear();
     passwordInput.sendKeys(pass);
     await driver.findElement(By.id("btnThemNV")).click();
