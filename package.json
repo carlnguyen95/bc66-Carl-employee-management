@@ -5,7 +5,8 @@
     "test": "nyc mocha test/**/*.js --timeout 60000",
     "account-validation": "nyc mocha test/form_validation/AccountValidationTest.js",
     "name-validation": "nyc mocha test/form_validation/NameValidationTest.js",
-    "mail-validation": "nyc mocha test/form_validation/MailValidationTest.js"
+    "mail-validation": "nyc mocha test/form_validation/MailValidationTest.js",
+    "password-validation": "nyc mocha test/form_validation/PasswordValidationTest.js"
   },
   "dependencies": {
     "nyc": "^15.1.0",
