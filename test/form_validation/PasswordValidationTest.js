@@ -27,7 +27,6 @@ describe("Password Validation tests", function () {
     value: "2",
   };
   let validWorkingHour = "180";
-  let mailInput;
   const specialCharacters = [
     "!",
     "@",
@@ -171,7 +170,7 @@ describe("Password Validation tests", function () {
       arr[randomIndex] = "P";
     }
     let pass = arr.join("");
-    console.log(pass);
+    // console.log(pass);
     passwordInput.clear();
     passwordInput.sendKeys(pass);
     await driver.findElement(By.id("btnThemNV")).click();
