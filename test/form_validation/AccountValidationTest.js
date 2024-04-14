@@ -16,6 +16,7 @@ const assert = require("assert");
  */
 describe("Account Validation tests", function () {
   let driver;
+  let validAccount = "12345";
   let validName = "ABC";
   let validMail = "email@email.com";
   let validPassword = "Pa$$w0rd";
@@ -26,12 +27,15 @@ describe("Account Validation tests", function () {
     value: "2",
   };
   let validWorkingHour = "180";
+  let accountInput;
 
   before(async function () {
     driver = await new Builder().forBrowser("chrome").build();
   });
 
   beforeEach(async () => {
+    await driver.get("http://127.0.0.1:5501/");
+    await driver.executeScript(`window.localStorage.removeItem("DSNV")`);
     await driver.get("http://127.0.0.1:5501/");
     await driver.manage().setTimeouts({ implicit: 500 });
     let addBtn = driver.findElement(By.id("btnThem"));
@@ -46,12 +50,13 @@ describe("Account Validation tests", function () {
     let positionSelect = new Select(postionOption);
     await positionSelect.selectByValue(validPosition.value);
     driver.findElement(By.id("gioLam")).sendKeys(validWorkingHour);
+    accountInput = await driver.findElement(By.id("tknv"));
   });
 
-  it("PASS case", async function () {
+  it("Success adding case", async function () {
     // Resolves Promise and returns boolean value
     let accountInput = await driver.findElement(By.id("tknv"));
-    await accountInput.sendKeys("12345");
+    await accountInput.sendKeys(validAccount);
     await driver.findElement(By.id("btnThemNV")).click();
 
     let status = await driver
@@ -80,6 +85,67 @@ describe("Account Validation tests", function () {
     result = await updateBtn.isDisplayed();
     assert.equal(result, true);
   });
+
+  it("Account is duplicated", async function () {
+    await accountInput.sendKeys(validAccount);
+    await driver.findElement(By.id("btnThemNV")).click();
+    await driver.manage().setTimeouts({ implicit: 500 }); //Wait 0.5s
+    await driver.findElement(By.id("btnThemNV")).click();
+    let accountTb = await driver.findElement(By.css("#tbTKNV")).getText();
+    assert.equal(accountTb, "This account exists. Please input another one");
+  });
+
+  it("Account has letters", async function () {
+    let errAcc = [...validAccount]; //String to array
+    let randomIndex = Math.round(Math.random() * 4);
+    errAcc[randomIndex] = "A";
+    errAcc = errAcc.join("");
+    await accountInputErr(errAcc);
+  });
+
+  it("Account has special characters", async function () {
+    let errAcc = [...validAccount]; //String to array
+    let randomIndex = Math.round(Math.random() * 4);
+    errAcc[randomIndex] = "#";
+    errAcc = errAcc.join("");
+    await accountInputErr(errAcc);
+  });
+
+  it("Account has mixed characters", async function () {
+    let errAcc = [...validAccount]; //String to array
+    let randomIndex = Math.round(Math.random() * 4);
+    errAcc[randomIndex] = "#";
+    randomIndex = Math.round(Math.random() * 4);
+    errAcc[randomIndex] = "B";
+    errAcc = errAcc.join("");
+    await accountInputErr(errAcc);
+  });
+
+  it("Account input has less than 4 numbers", async function () {
+    let randomLength = Math.round(Math.random() * 3);
+    let errAcc = "";
+    while (randomLength > 0) {
+      errAcc += "1";
+      randomLength--;
+    }
+    await accountInputErr(errAcc);
+  });
+
+  it("Account input has more than 6 numbers", async function () {
+    let errAcc = validAccount.concat("12");
+    await accountInputErr(errAcc);
+  });
+
+  async function accountInputErr(errAcc) {
+    accountInput.clear();
+    await accountInput.sendKeys(errAcc);
+    await driver.findElement(By.id("btnThemNV")).click();
+    let accountTb = await driver.findElement(By.css("#tbTKNV")).getText();
+    assert.equal(
+      accountTb,
+      "Account must contains 4-6 only numbers and not blank"
+    );
+  }
 
   after(async () => await driver.quit());
 });

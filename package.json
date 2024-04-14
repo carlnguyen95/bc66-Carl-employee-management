@@ -2,10 +2,12 @@
   "name": "employee-management",
   "version": "1.0.0",
   "scripts": {
-    "test": "npx mocha test/*.js --timeout 60000",
-    "account-validation": "npx mocha test/form_validation/AccountValidationTest.js"
+    "test": "nyc mocha test/**/*.js --timeout 60000",
+    "account-validation": "nyc mocha test/form_validation/AccountValidationTest.js",
+    "name-validation": "nyc mocha test/form_validation/NameValidationTest.js"
   },
   "dependencies": {
+    "nyc": "^15.1.0",
     "selenium-webdriver": "^4.19.0"
   },
   "devDependencies": {

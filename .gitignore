@@ -1,0 +1,4 @@
+#unnecessary folders
+.nyc_output
+coverage
+.vscode
