@@ -5,8 +5,8 @@ const assert = require("assert");
  * FLOW
  * 1. Access website
  * 2. Push "Them nhan vien" button
- * 3. Fill all valid info except account
- * 4. Fill account with test data
+ * 3. Fill all valid info
+ * 4. Fill test fields with test data
  *
  * CHECKPOINT:
  * 1. Wrong format
@@ -71,7 +71,7 @@ describe("Mail Validation tests", function () {
     await positionSelect.selectByValue(validPosition.value);
     driver.findElement(By.id("gioLam")).sendKeys(validWorkingHour);
 
-    mailInput = await driver.findElement(By.id("mail"));
+    mailInput = await driver.findElement(By.id("email"));
   });
 
   it("Success adding case", async function () {
@@ -112,19 +112,31 @@ describe("Mail Validation tests", function () {
       errMail += " ";
       randomLength--;
     }
-    await mailInputErr(errName);
+    await mailInputErr(errMail);
   });
 
   it("Invalid Mails", async function () {
-    let errName = [...validName]; //String to array
-    let randomIndex = Math.round(
-      Math.random() * (specialCharacters.length - 1)
-    );
-    let specialChar = specialCharacters[randomIndex];
-    randomIndex = Math.round(Math.random() * (errName.length - 1));
-    errName[randomIndex] = specialChar;
-    errName = errName.join("");
-    await mailInputErr(errName);
+    const invalidMailArr = [
+      "#@%^%#$@#$@#.com",
+      "@example.com",
+      "Joe Smith <email@example.com>",
+      "email.example.com",
+      "email@example@example.com",
+      ".email@example.com",
+      "email.@example.com",
+      "email..email@example.com",
+      "あいうえお@example.com",
+      "email@example.com (Joe Smith)",
+      "email@example",
+      "email@-example.com",
+      "email@example.web",
+      "email@111.222.333.44444",
+      "email@example..com",
+      "Abc..123@example.com]",
+    ];
+    await invalidMailArr.forEach(async (mail) => {
+      await mailInputErr(mail);
+    });
   });
 
   async function mailInputErr(errMail) {
@@ -132,7 +144,8 @@ describe("Mail Validation tests", function () {
     await mailInput.sendKeys(errMail);
     await driver.findElement(By.id("btnThemNV")).click();
     let mailTb = await driver.findElement(By.css("#tbEmail")).getText();
-    assert.equal(mailTb, "Wrong mail format");
+    assert.equal(mailTb, "Wrong email format");
+    driver.findElement(By.css("#btnDong")).click();
   }
 
   after(async () => await driver.quit());
