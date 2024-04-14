@@ -152,10 +152,17 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="Loại nhân viên"
+                      placeholder="Nhập số Tài khoản NV"
                       id="searchName"
                     />
                     <div class="input-group-prepend">
+                      <select name="search-type" id="searchTypeId">
+                        <option value="account">Tài khoản</option>
+                        <option value="name">Tên</option>
+                        <option value="mail">Email</option>
+                        <option value="position">Chức vụ</option>
+                        <option value="class">Xếp loại</option>
+                      </select>
                       <span class="input-group-text" id="btnTimNV"
                         ><i class="fa fa-search"></i
                       ></span>
