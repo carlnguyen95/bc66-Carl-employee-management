@@ -14,14 +14,14 @@ import {
 let controller = new EmployeeManagement("controller");
 
 const tblBody = document.querySelector("#tableDanhSach");
-const accountInput =  document.querySelector("#tknv");
-const nameInput =  document.querySelector("#name");
-const mailInput =  document.querySelector("#email");
-const passwordInput =  document.querySelector("#password");
-const startDayInput =  document.querySelector("#datepicker");
-const salaryInput =  document.querySelector("#luongCB");
-const positionInput =  document.querySelector("#chucvu");
-const workingHourInput =  document.querySelector("#gioLam");
+const accountInput = document.querySelector("#tknv");
+const nameInput = document.querySelector("#name");
+const mailInput = document.querySelector("#email");
+const passwordInput = document.querySelector("#password");
+const startDayInput = document.querySelector("#datepicker");
+const salaryInput = document.querySelector("#luongCB");
+const positionInput = document.querySelector("#chucvu");
+const workingHourInput = document.querySelector("#gioLam");
 const myModal = document.querySelector("#myModal");
 const addBtn = document.querySelector("#btnThem");
 const addEmployeeBtn = document.querySelector("#btnThemNV");
@@ -30,7 +30,7 @@ const updateEmployeeBtn = document.querySelector("#btnCapNhat");
 
 window.onload = () => {
   renderEmloyeesTable();
-}
+};
 
 addBtn.addEventListener("click", () => {
   clearAllFormInput();
@@ -38,7 +38,7 @@ addBtn.addEventListener("click", () => {
   clearModalStatus();
   updateEmployeeBtn.classList.add("d-none");
   addEmployeeBtn.classList.remove("d-none");
-})
+});
 
 /**
  * Add Employee
@@ -52,6 +52,7 @@ addEmployeeBtn.addEventListener("click", () => {
     return;
   }
 
+  setModalStatus("Tạo nhân viên mới thành công");
   clearAllInvalidNoti();
   renderEmloyeesTable();
 });
@@ -95,14 +96,13 @@ tblBody.addEventListener("click", (e) => {
     addEmployeeBtn.classList.add("d-none");
     updateEmployeeBtn.classList.remove("d-none");
   }
-})
+});
 
 updateEmployeeBtn.addEventListener("click", () => {
   try {
     const info = packInfo();
     controller.updateEmployee(info);
-  }
-  catch (err) {
+  } catch (err) {
     notifyErr(err);
     clearModalStatus();
     return;
@@ -111,8 +111,7 @@ updateEmployeeBtn.addEventListener("click", () => {
   setModalStatus("Cập nhật thành công");
   clearAllInvalidNoti();
   renderEmloyeesTable();
-})
-
+});
 
 /**
  * Get info from the form, pack into object
@@ -208,7 +207,7 @@ function renderEmloyeesTable() {
       </tr>
     `;
     tblBody.innerHTML += rowContent;
-  })
+  });
 }
 
 function clearAllFormInput() {
