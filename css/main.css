@@ -34,3 +34,23 @@
 #tableDanhSach td {
   vertical-align: middle;
 }
+
+.input-group {
+  position: relative;
+}
+
+.modal-status{
+  font-size: 0.75rem;
+}
+
+#searchName {
+  padding-right: 120px;
+}
+
+#searchTypeId {
+  position: absolute;
+  right: 50px;
+  height: 70%;
+  top: 15%;
+  z-index: 999;
+}
