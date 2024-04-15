@@ -21,11 +21,11 @@ export class EmployeeManagement {
   }
 
   checkDuplicate(info, onlyMail = false) {
-    this.#EmployeeList.findIndex((employee) => {
+    this.#EmployeeList.forEach((employee) => {
       if (!onlyMail) {
         if (employee.getAccount() === info.account)
           throw new InvalidAccountError(
-            "This account exists. Please input another one"
+            "This account exists. Please input another one",
           );
       }
       //Check if there is an account registered with this mail
@@ -34,7 +34,7 @@ export class EmployeeManagement {
         employee.getAccount() !== info.account
       )
         throw new InvalidMailError(
-          "This mail exists. Please input another one"
+          "This mail exists. Please input another one",
         );
     });
   }
@@ -43,7 +43,7 @@ export class EmployeeManagement {
     const EmployeesJson = JSON.stringify(
       this.#EmployeeList.map((employee) => {
         return employee.getInfo();
-      })
+      }),
     );
     localStorage.setItem("DSNV", EmployeesJson);
   }
@@ -105,7 +105,7 @@ export class EmployeeManagement {
     if (type === "account" || type === "mail") {
       if (indexArr.length > 1)
         throw new Error(
-          `There are ${indexArr.length} with same ${type} in EmployeeList`
+          `There are ${indexArr.length} with same ${type} in EmployeeList`,
         );
     }
 
