@@ -86,7 +86,7 @@ tblBody.addEventListener("click", (e) => {
     // Find employee with the account, display on form
     const objInfo = controller.searchInfoEmployee("account", account);
     const employeeObj = Object.values(objInfo)[0];
-    const info = employeeObj.getInfo();
+    const info = employeeObj.info;
     accountInput.value = info.account;
     nameInput.value = info.name;
     mailInput.value = info.mail;
@@ -231,8 +231,8 @@ function clearAllInvalidNoti() {
  */
 function renderEmloyeesTable() {
   tblBody.innerHTML = "";
-  controller.getEmployeeList().forEach((employee) => {
-    const info = employee.getInfo();
+  controller.EmployeeList.forEach((employee) => {
+    const info = employee.info;
     const rowContent = `
       <tr>
         <td>${info.account}</td>
@@ -265,16 +265,16 @@ function renderEmployeesTableOnSearch(searchType, searchKey) {
   tblBody.innerHTML = "";
   const matchList = controller.partialSearchInfoEmployee(searchType, searchKey);
   matchList.forEach((employee) => {
-    const info = employee.getInfo();
+    const info = employee.info;
     if (searchType === "position") {
       info[searchType].title = info[searchType].title.replaceAll(
         searchKey,
-        `<span class='text-danger'>${searchKey}</span>`
+        `<span class='text-danger'>${searchKey}</span>`,
       );
     } else {
       info[searchType] = info[searchType].replaceAll(
         searchKey,
-        `<span class='text-danger'>${searchKey}</span>`
+        `<span class='text-danger'>${searchKey}</span>`,
       );
     }
     const rowContent = `

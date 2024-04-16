@@ -16,23 +16,20 @@ export class EmployeeManagement {
     this.name = name;
   }
 
-  getEmployeeList() {
+  get EmployeeList() {
     return this.#EmployeeList;
   }
 
   checkDuplicate(info, onlyMail = false) {
     this.#EmployeeList.forEach((employee) => {
       if (!onlyMail) {
-        if (employee.getAccount() === info.account)
+        if (employee.account === info.account)
           throw new InvalidAccountError(
             "This account exists. Please input another one",
           );
       }
       //Check if there is an account registered with this mail
-      if (
-        employee.getMail() === info.mail &&
-        employee.getAccount() !== info.account
-      )
+      if (employee.mail === info.mail && employee.account !== info.account)
         throw new InvalidMailError(
           "This mail exists. Please input another one",
         );
@@ -42,7 +39,7 @@ export class EmployeeManagement {
   saveLocal() {
     const EmployeesJson = JSON.stringify(
       this.#EmployeeList.map((employee) => {
-        return employee.getInfo();
+        return employee.info;
       }),
     );
     localStorage.setItem("DSNV", EmployeesJson);
@@ -87,7 +84,7 @@ export class EmployeeManagement {
   searchIndexOfEmployees(type, searchKey) {
     let indexArr = [];
     for (let i in this.#EmployeeList) {
-      const info = this.#EmployeeList[i].getInfo();
+      const info = this.#EmployeeList[i].info;
       if (!info.hasOwnProperty(type))
         throw new Error(`"${type}" is an invalid search type`);
       if (type === "position") {
@@ -115,7 +112,7 @@ export class EmployeeManagement {
   partialSearchIndexOfEmployees(type, searchKey) {
     let indexArr = [];
     for (let i in this.#EmployeeList) {
-      const info = this.#EmployeeList[i].getInfo();
+      const info = this.#EmployeeList[i].info;
       if (!info.hasOwnProperty(type))
         throw new Error(`"${type}" is an invalid search type`);
       if (type === "position") {

@@ -41,8 +41,6 @@ export class Employee {
   #position = "";
   #salary = 0;
   #workingHour = 0;
-  #totalSalary = 0;
-  #classification = EMPLOYEE_CLASSES.AVERAGE;
   /*** END Private Fields ***/
 
   constructor(info) {
@@ -55,31 +53,28 @@ export class Employee {
    * @param {*} info includes fields: account, name, mail, password, startDay, position, salary, workingHour
    */
   validate(info) {
-    this.setAccount(info.account);
-    this.setName(info.name);
-    this.setMail(info.mail);
-    this.setPassword(info.password);
-    this.setStartDay(info.startDay);
-    this.setSalary(info.salary);
-    this.setPosition(info.position);
-    this.setWorkingHour(info.workingHour);
-
-    this.calTotalSalary();
-    this.classify();
+    this.account = info.account;
+    this.name = info.name;
+    this.mail = info.mail;
+    this.password = info.password;
+    this.startDay = info.startDay;
+    this.salary = info.salary;
+    this.position = info.position;
+    this.workingHour = info.workingHour;
   }
 
-  getInfo() {
+  get info() {
     const info = {
-      account: this.getAccount(),
-      name: this.getName(),
-      mail: this.getMail(),
-      password: this.getPassword(),
-      startDay: this.getStartDay(),
-      salary: this.getSalary(),
-      position: this.getPosition(),
-      workingHour: this.getWorkingHour(),
-      totalSalary: this.getTotalSalary(),
-      class: this.getClassification(),
+      account: this.account,
+      name: this.name,
+      mail: this.mail,
+      password: this.password,
+      startDay: this.startDay,
+      salary: this.salary,
+      position: this.position,
+      workingHour: this.workingHour,
+      totalSalary: this.totalSalary,
+      class: this.class,
     };
 
     return info;
@@ -96,14 +91,14 @@ export class Employee {
     return true;
   }
 
-  setAccount(account) {
+  set account(account) {
     if (!this.isAccountValid(account)) {
       throw new InvalidAccountError();
     }
     this.#account = `${account}`;
   }
 
-  getAccount() {
+  get account() {
     return this.#account;
   }
 
@@ -118,14 +113,14 @@ export class Employee {
     return true;
   }
 
-  setName(name) {
+  set name(name) {
     if (!this.isNameValid(name)) {
       throw new InvalidNameError();
     }
     this.#name = name;
   }
 
-  getName() {
+  get name() {
     return this.#name;
   }
 
@@ -169,14 +164,14 @@ export class Employee {
     return true;
   }
 
-  setMail(mail) {
+  set mail(mail) {
     if (!this.isMailValid(mail)) {
       throw new InvalidMailError();
     }
     this.#mail = mail;
   }
 
-  getMail() {
+  get mail() {
     return this.#mail;
   }
 
@@ -202,14 +197,14 @@ export class Employee {
     return true;
   }
 
-  setPassword(password) {
+  set password(password) {
     if (!this.isPasswordValid(password)) {
       throw new InvalidPasswordError();
     }
     this.#password = password;
   }
 
-  getPassword() {
+  get password() {
     return this.#password;
   }
 
@@ -225,14 +220,14 @@ export class Employee {
     return true;
   }
 
-  setStartDay(startDay) {
+  set startDay(startDay) {
     if (!this.isStartDayValid(startDay)) {
       throw new InvalidStartDayError();
     }
     this.#startDay = startDay;
   }
 
-  getStartDay() {
+  get startDay() {
     return this.#startDay;
   }
 
@@ -246,7 +241,7 @@ export class Employee {
     return false;
   }
 
-  setPosition(position) {
+  set position(position) {
     if (!this.isPositionValid(position)) {
       throw new InvalidPositionError();
     }
@@ -256,7 +251,7 @@ export class Employee {
     }
   }
 
-  getPosition() {
+  get position() {
     return this.#position;
   }
 
@@ -273,14 +268,14 @@ export class Employee {
     return true;
   }
 
-  setSalary(salary) {
+  set salary(salary) {
     if (!this.isSalaryValid(salary)) {
       throw new InvalidSalaryError();
     }
     this.#salary = salary * 1;
   }
 
-  getSalary() {
+  get salary() {
     return this.#salary;
   }
 
@@ -297,38 +292,27 @@ export class Employee {
     return true;
   }
 
-  setWorkingHour(workingHour) {
+  set workingHour(workingHour) {
     if (!this.isWorkingHourValid(workingHour)) {
       throw new InvalidWorkingHourError();
     }
     this.#workingHour = workingHour * 1;
   }
 
-  getWorkingHour() {
+  get workingHour() {
     return this.#workingHour;
   }
 
-  calTotalSalary() {
-    this.#totalSalary = this.#salary * this.#position.value;
+  get totalSalary() {
+    return this.#salary * this.#position.value;
   }
 
-  getTotalSalary() {
-    return this.#totalSalary;
-  }
-
-  classify() {
+  get class() {
     const time = parseFloat(this.#workingHour);
-    if (this.#workingHour < 160)
-      this.#classification = EMPLOYEE_CLASSES.AVERAGE;
-    else if (this.#workingHour < 176)
-      this.#classification = EMPLOYEE_CLASSES.GOOD;
-    else if (this.#workingHour < 192)
-      this.#classification = EMPLOYEE_CLASSES.VERYGOOD;
-    else this.#classification = EMPLOYEE_CLASSES.OUTSTANDING;
-  }
-
-  getClassification() {
-    return this.#classification;
+    if (this.#workingHour < 160) return EMPLOYEE_CLASSES.AVERAGE;
+    else if (this.#workingHour < 176) return EMPLOYEE_CLASSES.GOOD;
+    else if (this.#workingHour < 192) return EMPLOYEE_CLASSES.VERYGOOD;
+    else return EMPLOYEE_CLASSES.OUTSTANDING;
   }
 
   /*** END Methods ***/
